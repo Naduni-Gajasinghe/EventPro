@@ -9,6 +9,7 @@ import Pricing from "./pages/Pricing";
 import Feature from "./pages/Feature";
 import Demo from "./pages/Demo";
 import Profile from "./pages/Profile";
+import EventDetails from "./pages/EventDetails";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/feature" element={<Feature />} />
         <Route path="/demo" element={<Demo />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/event/:id" element={<EventDetails />} />
         
 
         {/* Protected Routes */}

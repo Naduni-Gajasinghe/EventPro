@@ -111,6 +111,21 @@ export default function Dashboard() {
 
   if (loading) return <p className="text-center text-gray-500 mt-10">Loading events...</p>;
 
+  const handleInvite = async (eventId, email) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(
+      `http://localhost:5000/invites/${eventId}`,
+      { email },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    alert(`Invitation sent to ${email}`);
+  } catch (err) {
+    alert("Error sending invite: " + err.response?.data?.error);
+  }
+};
+
+
   return (
     <div>
       {/* Navbar */}
@@ -199,7 +214,13 @@ export default function Dashboard() {
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 border rounded-lg hover:shadow-md transition"
               >
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{ev.title}</h3>
+                  <h3
+                      onClick={() => navigate(`/event/${ev.id}`)}
+                      className="text-lg font-semibold text-gray-800 cursor-pointer hover:underline"
+                    >
+                    {ev.title}
+                  </h3>
+
                   <p className="text-gray-600 text-sm">{ev.description}</p>
                   <p className="text-gray-500 text-xs mt-1">📅 {new Date(ev.date).toDateString()}</p>
                   <p className="text-gray-500 text-xs">🏷 {ev.category || "Uncategorized"}</p>
@@ -222,6 +243,18 @@ export default function Dashboard() {
                   >
                     Delete
                   </button>
+                  {/* Invite button for owners */}
+  {user?.id === ev.createdBy && (
+    <button
+      onClick={() => {
+        const email = prompt("Enter email to invite:");
+        if (email) handleInvite(ev.id, email);
+      }}
+      className="px-3 py-1 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+    >
+      Invite
+    </button>
+  )}
                 </div>
               </li>
             ))}
@@ -240,7 +273,13 @@ export default function Dashboard() {
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 border rounded-lg hover:shadow-md transition"
               >
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{ev.title}</h3>
+                  <h3
+  onClick={() => navigate(`/event/${ev.id}`)}
+  className="text-lg font-semibold text-gray-800 cursor-pointer hover:underline"
+>
+  {ev.title}
+</h3>
+
                   <p className="text-gray-600 text-sm">{ev.description}</p>
                   <p className="text-gray-500 text-xs mt-1">📅 {new Date(ev.date).toDateString()}</p>
                   <p className="text-gray-500 text-xs">🏷 {ev.category || "Uncategorized"}</p>
